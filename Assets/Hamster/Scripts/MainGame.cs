@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Firebase.Extensions;
+using Firebase.RemoteConfig;
 
 namespace Hamster
 {
@@ -178,7 +179,7 @@ namespace Hamster
           if (dependencyStatus == Firebase.DependencyStatus.Available) {
             // Create and hold a reference to your FirebaseApp,
             app = Firebase.FirebaseApp.DefaultInstance;
-            InitializeCommonDataAndStartGame();
+            SetRemoteConfigDefaults();
           } else {
             UnityEngine.Debug.LogError(
               $"Could not resolve all Firebase dependencies: {dependencyStatus}\n" +
@@ -191,21 +192,61 @@ namespace Hamster
     // before starting the game.
     private void SetRemoteConfigDefaults()
     {
-      throw new System.NotImplementedException();
+      var defaults = new System.Collections.Generic.Dictionary < string, object > ();
+      defaults.Add(
+        Hamster.MapObjects.AccelerationTile.AccelerationTileForceKey,
+        Hamster.MapObjects.AccelerationTile.AccelerationTileForceDefault);
+      defaults.Add(
+        Hamster.States.MainMenu.SubtitleOverrideKey,
+        Hamster.States.MainMenu.SubtitleOverrideDefault);
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      remoteConfig.SetDefaultsAsync(defaults).ContinueWithOnMainThread(
+        previousTask =>
+        {
+          FetchRemoteConfig(InitializeCommonDataAndStartGame);
+        }
+      );
     }
 
     // (Re)fetches Remote Config values and pass down the onFetchAndActivateSuccessful callback.
     // Called during the initialization flow but can also be called indepedently.
     public void FetchRemoteConfig(System.Action onFetchAndActivateSuccessful)
     {
-      throw new System.NotImplementedException();
+      if(app==null)
+      {
+        Debug.LogError($"Do not use Firebase until it is properly initialized by calling {nameof(InitializeFirebaseAndStartGame)}.");
+        return;
+      }
+
+      Debug.Log("Fetching data...");
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      remoteConfig.FetchAsync(System.TimeSpan.Zero).ContinueWithOnMainThread(
+        previousTask=>
+        {
+          if (!previousTask.IsCompleted)
+          {
+            Debug.LogError($"{nameof(remoteConfig.FetchAsync)} incomplete: Status '{previousTask.Status}'");
+            return;
+          }
+          ActivateRetrievedRemoteConfigValues(onFetchAndActivateSuccessful);
+        });
     }
 
     // The final method in the initialization flow that will activate fetched values
     // and on Success will call onFetchAndActivateSuccessful.
     private void ActivateRetrievedRemoteConfigValues(System.Action onFetchAndActivateSuccessful)
     {
-      throw new System.NotImplementedException();
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      var info = remoteConfig.Info;
+      if(info.LastFetchStatus == LastFetchStatus.Success)
+      {
+        remoteConfig.ActivateAsync().ContinueWithOnMainThread(
+          previousTask =>
+          {
+            Debug.Log($"Remote data loaded and ready (last fetch time {info.FetchTime}).");
+            onFetchAndActivateSuccessful();
+          });
+      }
     }
   }
 }

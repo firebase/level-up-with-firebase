@@ -14,6 +14,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using Firebase.RemoteConfig;
 
 namespace Hamster.States {
   class MainMenu : BaseState {
@@ -53,7 +54,7 @@ namespace Hamster.States {
 
     public override void Resume(StateExitValue results) {
       CommonData.mainGame.SelectAndPlayMusic(CommonData.prefabs.menuMusic, true);
-      InitializeUI();
+      CommonData.mainGame.FetchRemoteConfig(InitializeUI);
     }
 
     private void InitializeUI() {
@@ -61,7 +62,9 @@ namespace Hamster.States {
         menuComponent = SpawnUI<Menus.MainMenuGUI>(StringConstants.PrefabMainMenu);
       }
 
-      var subtitleOverride = JsonUtility.FromJson<Menus.MainMenuGUI.SubtitleOverride>(SubtitleOverrideDefault);
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      var subtitleOverride = JsonUtility.FromJson<Menus.MainMenuGUI.SubtitleOverride>(
+        remoteConfig.GetValue(SubtitleOverrideKey).StringValue);
       // Only sets values if all fields of the override are non-default.
       if(subtitleOverride != null &&subtitleOverride.IsValidOverride())
       {
