@@ -231,15 +231,15 @@ namespace Hamster.States {
     // Sets a Google Analytics user property 'subtitle_sentiment' to 'bored'
     void SetUserBoredOfSubtitle()
     {
-      throw new System.NotImplementedException();
+      Firebase.Analytics.FirebaseAnalytics.SetUserProperty("subtitle_sentiment", "bored");
     }
 
     // Sets a Google Analytics user property 'subtitle_sentiment' to 'enjoys'
     void SetUserEnjoysSubtitle()
     {
-      throw new System.NotImplementedException();
+      Firebase.Analytics.FirebaseAnalytics.SetUserProperty("subtitle_sentiment", "enjoys");
     }
-
+    
     public static class DayDivision {
       public enum Phase{Morning, Afternoon, Evening, Night};
       public static readonly System.TimeSpan DURATION_THAT_ENSURES_PHASE_CHANGE = new System.TimeSpan(9,0,0);
