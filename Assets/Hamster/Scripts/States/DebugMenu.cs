@@ -18,6 +18,9 @@ using UnityEngine;
 using UnityEngine.Diagnostics;
 using System.Threading;
 
+// Import Firebase
+using Firebase.Crashlytics;
+
 namespace Hamster.States {
   class DebugMenu : BaseState {
     private Menus.DebugMenuGUI menuComponent = null;
@@ -103,21 +106,39 @@ namespace Hamster.States {
 
     void CrashNow()
     {
-      throw new System.NotImplementedException();
+      TestCrash();
     }
 
     // Caught nonfatal exceptions can be sent to Crashlytics
     // as full issues by using Crashlytics.LogException 
     void LogNonfatalError()
     {
-      throw new System.NotImplementedException();
+      try
+      {
+        throw new System.Exception($"Test exception thrown in {nameof(LogNonfatalError)}");
+      }
+      catch(System.Exception exception)
+      {
+        Crashlytics.LogException(exception);
+      }
     }
 
     // Crashlytics allows you to add logs to your issues (Crashes, Errors and ANRs)
     // with the Crashlytics.Log command. These are strictly additive.
     void LogStringsAndCrashNow()
     {
-      throw new System.NotImplementedException();
+      Crashlytics.Log($"This is the first of two descriptive strings in {nameof(LogStringsAndCrashNow)}");
+      const bool RUN_OPTIONAL_PATH = false;
+      if(RUN_OPTIONAL_PATH)
+      {
+        Crashlytics.Log(" As it stands, this log should not appear in your records because it will never be called.");
+      }
+      else
+      {
+        Crashlytics.Log(" A log that will simply inform you which path of logic was taken. Akin to print debugging.");
+      }
+      Crashlytics.Log($"This is the second of two descriptive strings in {nameof(LogStringsAndCrashNow)}");
+      TestCrash();
     }
 
     // Crashlytics allows you to associate key-value pairs with callstacks.
@@ -127,7 +148,21 @@ namespace Hamster.States {
     // into discrete chunks (aka "discretizing the input").
     void SetAndOverwriteCustomKeyThenCrash()
     {
-      throw new System.NotImplementedException();
+      const string CURRENT_TIME_KEY = "Current Time";
+      System.TimeSpan currentTime = System.DateTime.Now.TimeOfDay;
+      Crashlytics.SetCustomKey(
+        CURRENT_TIME_KEY,
+        DayDivision.GetPartOfDay(currentTime).ToString() // Values must be strings
+      );
+
+      // Time Passes
+      currentTime += DayDivision.DURATION_THAT_ENSURES_PHASE_CHANGE;
+
+      Crashlytics.SetCustomKey(
+        CURRENT_TIME_KEY,
+        DayDivision.GetPartOfDay(currentTime).ToString()
+      );
+      TestCrash();
     }
 
     // Uses logging and custom keys to help diagnose existing & potential ANRs.
@@ -138,20 +173,59 @@ namespace Hamster.States {
     // Instead you will not have logged or recorded what method caused the ANR.
     // Thus, if the method name is unset, it occurred there
     void SetLogsAndKeysBeforeANR()
-    {
-      throw new System.NotImplementedException();
+    {       
+      System.Action<string,long> WaitAndRecord =
+      (string methodName, long targetCallLength)=>
+      {
+        System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+        const string CURRENT_FUNCTION = "Current Async Function";
+
+        // Initialize key and start timing
+        Crashlytics.SetCustomKey(CURRENT_FUNCTION, methodName);
+        stopWatch.Start();
+
+        // The actual (simulated) work being timed.
+        BusyWaitSimulator.WaitOnSimulatedBlockingWork(targetCallLength);
+
+        // Stop timing and unset key
+        stopWatch.Stop();
+
+        if(stopWatch.ElapsedMilliseconds>=BusyWaitSimulator.EXTREME_DURATION_MILLIS)
+        {
+          Crashlytics.Log($"'{methodName}' is long enough to cause an ANR on Android.");
+          if(Application.platform != RuntimePlatform.Android)
+          {
+            throw new System.InvalidOperationException(
+              $"Demo Exception: Call to {methodName} blocked the main thread for "+
+              "significant time on an environment without 'ANRs'.");
+          }
+        }
+        else if(stopWatch.ElapsedMilliseconds>=BusyWaitSimulator.SEVERE_DURATION_MILLIS)
+        {
+          Crashlytics.Log($"'{methodName}' is long enough it may cause an ANR on Android.");
+        }
+      };
+
+      WaitAndRecord("DoSafeWork",1000L);
+      WaitAndRecord("DoSevereWork",BusyWaitSimulator.SEVERE_DURATION_MILLIS);
+      WaitAndRecord("DoExtremeWork",2*BusyWaitSimulator.EXTREME_DURATION_MILLIS);
     }
 
     // Log an event with a float parameter
     void LogProgressEventWithStringLiterals()
     {
-      throw new System.NotImplementedException();
+      Firebase.Analytics.FirebaseAnalytics.LogEvent("progress", "percent", 0.4f);
     }
 
     // Log an event with an int parameter using predefined string constants
     void LogIntScoreWithBuiltInEventAndParams()
     {
-      throw new System.NotImplementedException();
+      Firebase.Analytics.FirebaseAnalytics
+        .LogEvent(
+          Firebase.Analytics.FirebaseAnalytics.EventPostScore,
+          Firebase.Analytics.FirebaseAnalytics.ParameterScore,
+          42
+        );
     }
 
     // Sets a Google Analytics user property 'subtitle_sentiment' to 'bored'

@@ -17,6 +17,8 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Firebase.Crashlytics;
+using Firebase.Extensions;
 
 namespace Hamster
 {
@@ -76,7 +78,7 @@ namespace Hamster
     void Start()
     {
       Screen.SetResolution(Screen.width / 2, Screen.height / 2, true);
-      InitializeCommonDataAndStartGame();
+      InitializeFirebaseAndStartGame();
     }
 
     void Update() {
@@ -165,10 +167,27 @@ namespace Hamster
       stateManager.PushState(new States.MainMenu());
     }
 
+    public Firebase.FirebaseApp app = null;
+
     // Begins the firebase initialization process and afterwards, opens the main menu.
     private void InitializeFirebaseAndStartGame()
     {
-      throw new System.NotImplementedException();
+      Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(
+        previousTask => 
+        {
+          var dependencyStatus = previousTask.Result;
+          if (dependencyStatus == Firebase.DependencyStatus.Available) {
+            // Create and hold a reference to your FirebaseApp,
+            app = Firebase.FirebaseApp.DefaultInstance;
+            // Set the recommended Crashlytics uncaught exception behavior.
+            Crashlytics.ReportUncaughtExceptionsAsFatal = true;
+            InitializeCommonDataAndStartGame();
+          } else {
+            UnityEngine.Debug.LogError(
+              $"Could not resolve all Firebase dependencies: {dependencyStatus}\n" +
+              "Firebase Unity SDK is not safe to use here");
+          }
+        });
     }
 
     // Sets Remote Config default values and fetchs new ones
