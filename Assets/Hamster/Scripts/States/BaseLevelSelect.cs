@@ -117,7 +117,7 @@ namespace Hamster.States {
     }
 
     public override void Resume(StateExitValue results) {
-      ShowUI();
+      CommonData.mainGame.FetchRemoteConfig(ShowUI);
     }
 
     public override void Suspend() {

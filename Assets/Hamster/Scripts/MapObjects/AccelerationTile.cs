@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
+using Firebase.RemoteConfig;
 
 namespace Hamster.MapObjects {
 
@@ -32,7 +33,8 @@ namespace Hamster.MapObjects {
     public float Acceleration { get; private set; }
 
     private void Start() {
-      Acceleration = AccelerationTileForceDefault;
+      var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+      Acceleration = (float)remoteConfig.GetValue(AccelerationTileForceKey).DoubleValue;
     }
 
     public void FixedUpdate() {
