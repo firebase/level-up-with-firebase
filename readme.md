@@ -1,33 +1,27 @@
 **MechaHamster: Level Up with Firebase Edition**
 ======
 
-The original version of MechaHamster is a game about guiding a futuristic hamster ball
-through dangerous space mazes, that allowed users to create mazes of their own, and share
-them with friends.
+The original version of MechaHamster is a game about guiding a futuristic hamster ball through dangerous space mazes, allowing users to create mazes of their own and share them with friends.
 
-This version has gone back to basics and removed Firebase and all other Google
- functionality. It's your mission, if you choose to accept it, to reintegrate some of it yourself!
+This new version has gone back to basics and removed Firebase and all other Google products’ functionality altogether. It's your mission, if you choose to accept it, to personally integrate some of it yourself!
 
 ## Motivation
 
-While the original MechaHamster serves as a demonstration, sample, and reference for integrating
-[Firebase][] with the [Firebase Unity SDK][] into a game project, this time, as you rebuild the Firebase
-functionality of the game you'll learn more about how Firebase works while doing so!
+While the original MechaHamster serves as a demonstration, sample, and reference for how to integrate 
+[Firebase][] into a game project using the the [Firebase Unity SDK][] - this time, as you rebuild the Firebase
+functionality of the game yourself you'll learn more about how Firebase works first hand - trial by fire!
 
 ## Overview
 
-Once completed, **MechaHamster: Level Up with Firebase Edition** demonstrates the following concepts:
+After this codelab, the completed version of **MechaHamster: Level Up with Firebase Edition** demonstrates the following concepts:
    * [Firebase Analytics][] to measure various aspects of user behavior.
-   * [Firebase Crashlytics][] to capture and annotate crashes in game play and help
-     developers diagnose and fix issues.
+   * [Firebase Crashlytics][] to capture and annotate crashes in gameplay that will help developers diagnose and fix issues.
    * [Firebase Remote Config][] to allow game admins to run experiments on game data without
      redeploying a new build of the game.
 
 ## Downloading
 
-**MechaHamster: Level Up with Firebase Edition** can be downloaded from [Github][].
-
-To do so from the git CLI:
+**MechaHamster: Level Up with Firebase Edition** can be downloaded from [GitHub][] using  the following command:
 ```
 git clone --branch main  https://github.com/firebase/level-up-with-firebase.git
 ```
