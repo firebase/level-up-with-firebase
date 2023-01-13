@@ -178,16 +178,16 @@ namespace Hamster
       throw new System.NotImplementedException();
     }
 
-    // (Re)fetches Remote Config values and pass down the onFetchAndActivateCompletedSuccesfully callback.
+    // (Re)fetches Remote Config values and pass down the onFetchAndActivateSuccessful callback.
     // Called during the initialization flow but can also be called indepedently.
-    public void FetchRemoteConfig(System.Action onFetchAndActivateCompletedSuccesfully)
+    public void FetchRemoteConfig(System.Action onFetchAndActivateSuccessful)
     {
       throw new System.NotImplementedException();
     }
 
     // The final method in the initialization flow that will activate fetched values
-    // and on Success will call onFetchAndActivateCompletedSuccesfully.
-    private void ActivateRetrievedRemoteConfigValues(System.Action onFetchAndActivateCompletedSuccesfully)
+    // and on Success will call onFetchAndActivateSuccessful.
+    private void ActivateRetrievedRemoteConfigValues(System.Action onFetchAndActivateSuccessful)
     {
       throw new System.NotImplementedException();
     }
