@@ -143,15 +143,13 @@ Unity can catch compilation errors when the editor is loading/initializing. If t
             <br>
 <br>
 <br>
-##  Target Device Build Errors<br>
+
+##  Resolver and Target Device Build Errors<br>
 &emsp;This is by far the most complicated part of the process and the most prone to errors. The section is divided into three sections which are less chronological and have more to do with your build target. The first section ("General Tips'') applies regardless of your target, while the remaining two have to do with which target you are building for (Android or iOS).
 <details><summary>General Tips</summary>
 
-*   If literally nothing in this document gets the game to build and run
-        successfully, upgrade your install the newest LTS Unity Editor and
-        [update your packages](https://firebase.google.com/docs/unity/troubleshooting-faq#update-sdk-version).
-*   If at any point you want or need more information consider enabling
-        verbose logging and reading the log after trying to build again
+*   If at any point you want or need more resolver and/or build information, consider
+        enabling verbose logging and reading the log after trying to build again
     *   to enable verbose logging do the following on
         *   iOS
             *   Enable "Verbose Logging" in Assets > External Dependency
@@ -159,9 +157,12 @@ Unity can catch compilation errors when the editor is loading/initializing. If t
         *   Android
             *   Enable "Verbose Logging" in Assets > External Dependency
                     Manager > Android Resolver > Settings
+*   If literally nothing in this document gets the game to build and run
+        successfully, upgrade your install the newest LTS Unity Editor and
+        [update your packages](https://firebase.google.com/docs/unity/troubleshooting-faq#update-sdk-version).
 </details>
 </details>
-<details><summary>Android Resolver</summary>
+<details><summary>Android</summary>
 <blockquote>
 <details>
 <summary>Use Force Resolve if having issues with resolution</summary>
@@ -173,19 +174,23 @@ Unity can catch compilation errors when the editor is loading/initializing. If t
             Android Resolver > **Force** Resolve
         *   While this is slower, it is more dependendable as it clears
                 old intermediate data
-    *   if the build is still failing proceed
+    *   if the build is still failing try each of the following items in this list
 
 </details>
 <details>
 <summary>JDK, SDK, NDK, Gradle Issues (including locating)</summary>
 
-*   If you receive error logs about Unity being unable to locate the
-        JDK, Android SDK Tools or NDK you may need to toggle some of your
-        external tool settings to get Unity to acknowledge them
+*   Reasons to do this:
+    *   If Force Resolution is failing and you have not done this yet, try this.
+    *   If you receive error logs about Unity being unable to locate the
+        JDK, Android SDK Tools or NDK
+*   What it does:
+    *   Toggling the external tool settings forces Unity to acknowledge them as it may not have loaded them properly.
+*   What to do: 
     *   Enter Unity->Preferences->External Tools
-    *   Disable(uncheck) the JDK,Android SDK,Android NDK and Grandle
-    *   Restore the settings to their original values
-    *   try building again
+    *   Toggle the JDK, Android SDK, Android NDK and Gradle checkboxes such that they have the oppsite value of what they started with
+    *   Toggle them back to their original values
+    *   Try force resolve and/or building again
 </details>
 <details>
 <summary>Enable Maintemplate.gradle if you can</summary>
@@ -217,9 +222,31 @@ Unity can catch compilation errors when the editor is loading/initializing. If t
 </details>
 
 <details>
-<summary>iOS Resolver</summary>
+<summary>iOS</summary>
 
 <blockquote>
+<details>
+<summary>Investigate Cocoapods if iOS resolution fails</summary>
+
+*   First of all make sure its
+            [properly installed](https://guides.cocoapods.org/using/getting-started.html)
+    *   Verify that
+            [`pod install` and `pod update` run without errors](https://guides.cocoapods.org/using/pod-install-vs-update.html) in the folder where the Podfile is (usually the root folder of the Xcode project).
+        *   Cocoapods
+                [requires your terminal to be using UTF-8](https://firebase.google.com/docs/unity/troubleshooting-faq#issues_when_building_for_ios_with_cocoapods)
+            *   Do this if you see the following in the cocoapods log <br>`WARNING: CocoaPods requires your terminal to be using UTF-8 encoding.`
+</details>
+<details>
+<summary>Win32 Errors when building Xcode Workspace/Project on Mac</summary>
+
+*   If the Unity Editor's console displays build output that
+            mentions win32 errors, upgrade to a more recent LTS version
+            of Unity after 2020.3.40f1.
+    *   [Unity Bug](https://issuetracker.unity3d.com/issues/webgl-builderror-constant-il2cpp-build-error-after-osx-12-dot-3-upgrade)
+    *   While this might seem extreme since there are a couple
+            workarounds, upgrading is the fastest, most convenient
+            and the most dependable method to deal with it.
+</details>
 <details>
 <summary>Prefer opening Xcode Workspace files in Xcode to opening Xcode Projectr Files</summary>
 
@@ -234,28 +261,6 @@ Unity can catch compilation errors when the editor is loading/initializing. If t
             alternatively go into the iOS resolver settings, enter the
             dropdown **Cocoapods Integration** and select "Xcode
             project"
-</details>
-<details>
-<summary>Investigate Cocoapods if iOS resolution fails</summary>
-
-*   First of all make sure its
-            [properly installed](https://guides.cocoapods.org/using/getting-started.html)
-    *   Verify that
-            [`pod install` and `pod update` run without errors](https://guides.cocoapods.org/using/pod-install-vs-update.html) in the folder where the Podfile is (usually the root folder of the Xcode project).
-        *   Cocoapods
-                [requires your terminal to be using UTF-8](https://firebase.google.com/docs/unity/troubleshooting-faq#issues_when_building_for_ios_with_cocoapods)
-            *   Do this if you see the following in the cocoapods log <br>`WARNING: CocoaPods requires your terminal to be using UTF-8 encoding.`
-</details>
-<details>
-<summary>Win32 Errors when building on Mac</summary>
-
-*   If the Unity Editor's console displays build output that
-            mentions win32 errors, upgrade to a more recent LTS version
-            of Unity after 2020.3.40f1.
-    *   [Unity Bug](https://issuetracker.unity3d.com/issues/webgl-builderror-constant-il2cpp-build-error-after-osx-12-dot-3-upgrade)
-    *   While this might seem extreme since there are a couple
-            workarounds, upgrading is the fastest, most convenient
-            and the most dependable method to deal with it.
 </details>
 </blockquote>
 
