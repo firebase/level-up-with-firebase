@@ -39,7 +39,7 @@ namespace Hamster {
     void Start() {
       IsProcessingDeath = false;
       HitPoints = kInitialHitPoints;
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE //Development-only on Mac OS X, Windows or Linux
       inputController = new InputControllers.KeyboardController();
 #else
       inputController = new InputControllers.TiltController(this);
