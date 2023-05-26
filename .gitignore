@@ -223,3 +223,9 @@ Assets/Plugins.meta
 #  those mainTemplate.gradle 
 # and even downloaded libraries 
 
+#tvOS
+
+/Assets/Plugins/tvOS/Firebase/
+/Assets/Plugins/tvOS/Firebase*
+/Assets/Plugins/tvOS.meta
+
