@@ -11,9 +11,17 @@ While the original MechaHamster serves as a demonstration, sample, and reference
 [Firebase][] into a game project using the the [Firebase Unity SDK][] - this time, as you rebuild the Firebase
 functionality of the game yourself you'll learn more about how Firebase works first hand - trial by fire!
 
+## Learning Pathways
+
+The following Firebase learning pathways are intended for use with this repository:
+  * [Understand your game's crashes using advanced Crashlytics features](https://firebase.google.com/learn/pathways/firebase-advanced-crashlytics-unity-games)
+  * [Use Remote Config to update your Unity game without a release](https://firebase.google.com/learn/pathways/firebase-remote-config-unity-games)
+
+The [`completed`](https://github.com/firebase/level-up-with-firebase/tree/completed) branch of this repository demonstrates the final state of the project after finishing the above pathways.
+
 ## Overview
 
-After this codelab, the completed version of **MechaHamster: Level Up with Firebase Edition** demonstrates the following concepts:
+After the aforementioned learning pathways, the completed version of **MechaHamster: Level Up with Firebase Edition** demonstrates the following concepts:
    * [Firebase Analytics][] to measure various aspects of user behavior.
    * [Firebase Crashlytics][] to capture and annotate crashes in gameplay that will help developers diagnose and fix issues.
    * [Firebase Remote Config][] to allow game admins to run experiments on game data without
